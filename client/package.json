@@ -3,18 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.105",
-    "@types/react": "^18.3.4",
-    "@types/react-dom": "^18.3.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.10.5",
+    "axios": "^1.7.9",
+    "core-js": "^3.23.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^7.1.1",
+    "react-scripts": "^5.0.0",
+    "typescript": "^5.7.2",
+    "web-vitals": "^4.2.4"
+  },
+  "overrides": {
+    "react-scripts": {
+      "typescript": "^5"
+    }
   },
   "scripts": {
     "start": "react-scripts start",
@@ -39,5 +45,23 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-class-properties": "^7.20.0",
+    "@babel/plugin-transform-dynamic-import": "^7.20.0",
+    "@babel/plugin-transform-json-strings": "^7.20.0",
+    "@babel/plugin-transform-nullish-coalescing-operator": "^7.20.0",
+    "@babel/plugin-transform-numeric-separator": "^7.20.0",
+    "@babel/plugin-transform-optional-catch-binding": "^7.20.0",
+    "@babel/plugin-transform-optional-chaining": "^7.20.0",
+    "@babel/plugin-transform-unicode-property-regex": "^7.20.0",
+    "@types/body-parser": "^1.19.5",
+    "@types/js-cookie": "^3.0.6",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "eslint-webpack-plugin": "^3.2.0",
+    "js-cookie": "^3.0.5",
+    "js-cookies": "^1.0.4",
+    "rimraf": "^4.0.0"
   }
 }

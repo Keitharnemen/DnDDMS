@@ -1,0 +1,22 @@
+export default interface IMonster {
+    id: number,
+    name: string,
+    strength: number,
+    dexterity: number,
+    condition: number,
+    wisdom: number,
+    inteligence: number,
+    charisma: number,
+    level: number,
+    AC: number,
+    initiative: number,
+    speed: number,
+    maxHP: number,
+    currentHP: number,
+    temporaryHP: number,
+    skills: string[],
+    atuts: string[],
+    XP: number,
+    difficulty: number,
+    description: string
+}

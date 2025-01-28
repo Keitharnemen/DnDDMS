@@ -1,0 +1,38 @@
+export default interface ICharacter {
+    id: number,
+    //userId: number,
+    campaignId: number,
+    name: string,
+    surname: string,
+    raceId: number,
+    classId: number,
+    STR: number,
+    DEX: number,
+    CON: number,
+    WIS: number,
+    INT: number,
+    CHA: number,
+    level: number,
+    HP: number
+    // character: number,
+    // AC: number,
+    // initiative: number,
+    // speed: number,
+    // maxHP: number,
+    // currentHP: number,
+    // temporaryHP: number,
+    // skills: string[],
+    // atuts: string[],
+    // items: number[],
+    // age: number,
+    // skin: string,
+    // hair: string,
+    // weight: number,
+    // height: number,
+    // eyeColour: string,
+    // allies: string[],
+    // money: number[],
+    // XP: number
+}
+
+export type frontCharacter = Omit<ICharacter, 'id' | 'campaignId'>

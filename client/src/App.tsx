@@ -1,25 +1,22 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Home from './views/Home';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Campaigns from './views/Campaign';
+import Sessions from './views/Session';
+import SessionsDetails from './views/SessionDetails';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <Routes>
+          <Route path="/"  element={<Home/>} />
+          <Route path="/campaigns"  element={<Campaigns/>} />
+          <Route path="/campaigns/sessions"  element={<Sessions/>} />
+          <Route path="/campaigns/sessions/details"  element={<SessionsDetails/>} />
+        </Routes>
+    </Router>
+    </>
   );
 }
 

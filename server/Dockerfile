@@ -11,6 +11,9 @@ RUN npm install
 # Skopiuj resztę aplikacji
 COPY . .
 
+# Skopiowanie pliku seed.ts
+COPY ./seed.ts ./seed.ts
+
 # Kompilacja TypeScript
 RUN npm run build
 
@@ -18,4 +21,4 @@ RUN npm run build
 EXPOSE 5000
 
 # Uruchom aplikację
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/app.js"]
