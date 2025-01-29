@@ -1,15 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getCampaignName } from "../api/campaignApi";
 import SessionList from "../components/Session/SessionList";
 import { useNavigate } from "react-router-dom";
 import { SidePanelButton } from "../components/SidePanel/SidePanelButton";
+import ErrorPanel from "../components/Error/ErrorPanel";
 
 const Sessions = () => {
     const navigate = useNavigate()
-    let name = ''
+    const [name, setName] = useState('')
+    const [error, setError] = useState<{status: number, message: string} | null>(null)
     const getName =  async () => {
-        const campaign = await getCampaignName()
-        name = campaign.name
+        const response = await getCampaignName()
+        
+        if (response.status ===  200) {setName(response.data.name)}
+        else {setError({status: response.status, message: response.data.message || 'Unknown'})}
     }
 
     useEffect(() =>  {getName()}, [])
@@ -22,6 +26,7 @@ const Sessions = () => {
         <SidePanelButton/>
         <SessionList/>
         <button onClick={() => exitCampaign()}>Wyjdź z kampanii</button>
+        {error && <ErrorPanel status={error.status} message={error.message} onClick={() => setError(null)}/>}
         </>
     )
 }

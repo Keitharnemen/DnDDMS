@@ -3,74 +3,107 @@ import { Request, Response} from "express";
 import { getNextId } from "../utils/idGenerator";
 
 export const getSessions = async (req : Request, res : Response) => {
-    const campaignID = req.session.campaignID
     try {
-        const campaings = await SessionModel.find({campaignID:campaignID})
-        if(campaings.length === 0) return res.status(403).json({message: "Nie ma danych"});
-        return res.status(200).json(campaings)
+        const campaignID = req.session.campaignID
+        console.log("ID Kampani")
+        console.log(campaignID)
+        console.log(req.session.campaignID)
+        if (!campaignID){res.status(400).json({message: 'Invalid input: no campaignID'}); return}
+
+        const sessions = await SessionModel.find({campaignId:campaignID})
+        if(sessions.length === 0){res.status(404).json({message: "No sessions found"}); return}
+        res.status(200).json(sessions)
     }
     catch (err) {
-        return res.status(500).json({message: "Server error: ", error: err instanceof Error ? err.message : err})
+        res.status(500).json({message: "Server error: ", error: err instanceof Error ? err.message : err})
     }
 }
 
 export const addSession = async (req : Request, res : Response) => {
+    try {
     const campaignID = req.session.campaignID
+    if (!campaignID){res.status(400).json({message: 'Invalid input: no campaignID'}); return}
     const {name} = req.body
+    if(!name) {res.status(400).json({message: 'Invalid input: no name'}); return}
 
-
-    const newSession = new SessionModel([
-        getNextId("sessions"),
+    const id = await getNextId("sessions")
+    const newSession = new SessionModel({
+        id: id,
         name,
-        campaignID,
-        Date.now().toString()
-    ])
-
+        campaignId: campaignID,
+        startDate: Date.now().toString()
+    })
+    console.log(newSession)
     const saved = await newSession.save()
     res.status(201).json(saved)
+} catch (err) {
+    res.status(500).json({message: "Server error: ", error: err instanceof Error ? err.message : err})
+}
+
 }
 
 export const changeSessionID = (req : Request, res: Response) => {
-    const sessionID = req.body
+    try {
+    const {sessionID} = req.body
+    if (!sessionID){res.status(400).json({message: 'Invalid input: no sessionId'}); return}
+
     req.session.sessionID = sessionID
-    return res.status(200).json({ message: "Session ID ustawione.", sessionID });
+    res.status(200).json({ message: "Session ID ustawione.", sessionID });
+
+    } catch (err) {
+        res.status(500).json({message: "Server error: ", error: err instanceof Error ? err.message : err})
+    }
+    
 }
 
 
 export const updateSessionData = async (req : Request, res: Response) => {
+    try{
     const sessionID = req.session.sessionID
+    if (!sessionID){res.status(400).json({message: 'Invalid input: no sessionId'}); return}
     const {plan, notes} = req.body
+    if(!plan || !notes) {res.status(400).json({message: 'Invalid input: no plan or notes'}); return}
 
     const session = await SessionModel.findOne({id: sessionID})
-    if (!session) { 
-        return res.status(404).json({ message: "Sesja nie została znaleziona" });
-      }
+    if (!session) {res.status(404).json({ message: "No session found" }); return}
 
     session.plan = plan || session.plan 
     session.notes = notes || session.notes
+
+    console.log(session)
     await session.save();
     res.status(200).json(session);
+    }catch (err) {
+        res.status(500).json({message: "Server error: ", error: err instanceof Error ? err.message : err})
+    }
 }
 
 export const getSessionsDetails = async (req : Request, res : Response) => {
-    const sessionID  = req.session.sessionID
     try {
+    const sessionID = req.session.sessionID
+    if (!sessionID){res.status(400).json({message: 'Invalid input: no sessionId'}); return}
+    
         const session = await SessionModel.findOne({id: sessionID})
-        return res.status(200).json(session)
+        if (!session) {res.status(404).json({ message: "No session found" }); return}
+        res.status(200).json(session)
     }
     catch (err) {
-        return res.status(500).json({message: "Server error: ", error: err instanceof Error ? err.message : err})
+        res.status(500).json({message: "Server error: ", error: err instanceof Error ? err.message : err})
     }
 }
 
 export const lockSession = async (req: Request, res: Response) => {
-    const sessionID = req.session.sessionID
+    try {
+        const sessionID = req.session.sessionID
+        if (!sessionID){res.status(400).json({message: 'Invalid input: no sessionId'}); return}
 
     const session = await SessionModel.findOne({id: sessionID})
-    if (!session) { 
-        return res.status(404).json({ message: "Sesja nie została znaleziona" });
-      }
+    if (!session) {res.status(404).json({ message: "No session found" }); return}
+
     session.endDate = Date.now().toString()
     await session.save();
-    return res.status(200).json(session); 
+    res.status(200).json(session);
+    } catch (err) {
+        res.status(500).json({message: "Server error: ", error: err instanceof Error ? err.message : err})
+    }
 }

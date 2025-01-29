@@ -1,0 +1,35 @@
+/* Styl dla ErrorMessage */
+.error-message-wrapper {
+    background-color: #f44336;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+    position: relative;
+}
+
+.error-message h3 {
+    margin: 0;
+}
+
+.error-message p {
+    margin-top: 5px;
+}
+
+/* Styl dla przycisku zamknięcia */
+.close-button {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background-color: transparent;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: #ccc;
+}

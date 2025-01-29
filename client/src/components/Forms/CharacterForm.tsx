@@ -4,6 +4,7 @@ import {useEffect, useMemo, useRef, useState } from "react"
 import IRace from "../../types/races"
 import IClasses from "../../types/classes"
 import { fetchClasses, fetchRaces } from "../../api/characterApi"
+import ErrorPanel from "../Error/ErrorPanel"
 
 
 interface CharacterFormProps {
@@ -11,24 +12,30 @@ interface CharacterFormProps {
     onSubmit: (character : ICharacter)  => void
     onCancel: () => void
 };
-
+// formularz dla tworzenia postaci
 const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCancel}) => {
 
     const min = 8
     const [races, setRaces] = useState<IRace[]>([])
     const [classes, setClasses] = useState<IClasses[]>([])
+    const [error, setError] = useState<{status: number, message: string} | null>(null)
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-            const r = await fetchRaces()
-            const c = await fetchClasses()
-            setRaces(r)
-            setClasses(c)
+            const responseR = await fetchRaces()
+            if (responseR.status === 200) {  const r : IRace[] = responseR.data; setRaces(r)}
+            else {setError({status: responseR.status, message: responseR.data.message || 'Unknown'}); return}
+            
+            const responseC = await fetchClasses()
+            if (responseC.status === 200) {  const c : IClasses[] = responseC.data; setClasses(c)}
+            else {setError({status: responseR.status, message: responseC.data.message || 'Unknown'}); return} 
             }
-            catch (e) {console.error("Error fetching classes or races", e)}
-            fetchData();
-        }},[])
+            catch (e) {setError({status: 500, message: 'Błąd serwera'})}
+            
+        }
+        fetchData();
+    },[])
 
 
     const [form, setForm] = useState({
@@ -48,12 +55,14 @@ const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCan
         CHA: character?.CHA || min
     })
 
+    // przechowywane historycznie dane, mające wpływ na niektóre pola w formularzu przy zmianie
     const prevHPArgs = useRef({
         level: form.level,
         constitution: form.CON,
         classID: form.classId
     })
     
+    //funkcja liczenia punktów życia przy zmianach niektórych atrybutów
     const calculateHP = useMemo(() =>
     {
         let HP = form.HP;
@@ -290,6 +299,7 @@ const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCan
             <button type="submit" name='chSubmitButton' id='chSubmitButton' className="character-form character-button">{character ? "Zapisz zmiany" : "Stwórz postać"}</button>
             <button type="button" name='chCancelButton' id='chCancelButton' className="character-form character-button" onClick={onCancel}>Anuluj</button>
         </form>
+        {error && <ErrorPanel status={error.status} message={error.message} onClick={() => setError(null)}/>}
         </>, 
         document.body
     )   

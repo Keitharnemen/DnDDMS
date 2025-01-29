@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { alockSession, fetchSessionDetails, updateSessionData } from "../api/sessionApi";
 import { SidePanelButton } from "../components/SidePanel/SidePanelButton";
+import ErrorPanel from "../components/Error/ErrorPanel";
 
 const SessionsDetails = () => {
     
@@ -9,13 +10,17 @@ const SessionsDetails = () => {
     const navigate = useNavigate()
     const  [plan, setPlan] = useState<string>('')
     const  [notes, setNotes] = useState<string>('')
+    const [error, setError] = useState<{status: number, message: string} | null>(null)
     let name = ''
 
     const getSessionsDetails = async () => {
-        const data = await fetchSessionDetails();
-        setPlan(data.plan)
-        setNotes(data.notes)
-        name = data.name
+        const response = await fetchSessionDetails();
+        if (response.status ===  200) { 
+            const data = response.data; 
+            setPlan(data.plan);
+            setNotes(data.notes);
+            name = data.name}
+        else {setError({status: response.status, message: response.data.message || 'Unknown'})}
     }
 
     useEffect(() => {
@@ -23,19 +28,22 @@ const SessionsDetails = () => {
       }, []);
 
     const saveData = async () => {
-        await updateSessionData(plan, notes)
+        const response = await updateSessionData(plan, notes)
+        if (response.status ===  200) {}
+        else {setError({status: response.status, message: response.data.message || 'Unknown'})}
     }
 
     const exitSession = () => {
         navigate('/campaigns/sessions')
     }
     const lockSession = async () => {
-        await alockSession()
-        navigate('/campaigns/sessions')
+        const response = await alockSession()
+        if (response.status ===  200) {navigate('/campaigns/sessions')}
+        else {setError({status: response.status, message: response.data.message || 'Unknown'})}
     }
 
     return (
-        <>
+        <div className="sessionDetails-wrapper">
         <SidePanelButton/>
         <h1>Sesja : {name}</h1>
         
@@ -52,8 +60,8 @@ const SessionsDetails = () => {
         <button type="button" onClick={async () => await saveData()}>Zapisz dane</button>
         <button type="button" onClick={() => exitSession()}>Wyjdź z sesji</button>
         <button type="button" onClick={() => lockSession()}>Zamknij sesję</button>
-        
-        </>
+        {error && <ErrorPanel status={error.status} message={error.message} onClick={() => setError(null)}/>}
+        </div>
     )
 }
 

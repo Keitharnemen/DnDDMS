@@ -6,7 +6,7 @@ import { checkRoles } from "../../utils/cookies"
 
 export const SidePanelButton : React.FC = () => {
     const [isOpen, setIsOpen] = useState(false)
-    const [isAdmin, isMaster] = checkRoles()
+    const {isAdmin, isMaster} = checkRoles()
 
     const closePanel = () => setIsOpen(false)
 

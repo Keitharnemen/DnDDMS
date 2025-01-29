@@ -2,30 +2,48 @@ import api from './api'
 import IUser from '../types/users';
 import { useNavigate } from 'react-router-dom';
 
-export const getUserName = async () : Promise<IUser> => {
+// pobieranie nazwy użytkownika
+export const getUserName = async () => {
+  try{
     const response = await api.get('/users/getUser')
-    return response.data
+    return response;
+  }catch (error: any) {
+    if(error.response){return error.response}
+    else {return {status: 500, message: 'Błąd serwera'};}
+  }
   }
 
-  export const loginUser = async (login: string, password: string) : Promise<number>  => {
+  // logowanie użytkownika
+  export const loginUser = async (login: string, password: string)  => {
     try {
       const response = await api.post(`/users/login`, {login : login, password : password});
-      return response.status;
-    } catch (error) {
-      console.error('Error fetching campaigns:', error);
-      throw error;
+      return response;
+    } catch (error: any) {
+      if(error.response){return error.response}
+      else {return {status: 500, message: 'Błąd serwera'};}
     }
   }
 
-  export const addUser = async (name: string, surname: string, login: string, password: string, isMaster: boolean, isAdmin : boolean) : Promise<IUser> =>
+  // dodawanie użytkownika
+  export const addUser = async (name: string, surname: string, login: string, password: string, isMaster: boolean, isAdmin : boolean) =>
     {
+      try{
       const response = await api.post('/users/create', {name: name, surname: surname, login: login, password: password, isAdmin: isAdmin, isMaster : isMaster})
-      return response.data
+      return response
+      }catch (error: any) {
+        if(error.response){return error.response}
+        else {return {status: 500, message: 'Błąd serwera'};}
+      }
     }
   
+  // wylogowanie użytkownika
   export const signOutUser = async () => {
-      const navigate = useNavigate()
-
+    try{
       const response = await api.post('/users/logout')
-      navigate('/')
+      return response
+    }
+    catch (error: any) {
+      if(error.response){return error.response}
+      else {return {status: 500, message: 'Błąd serwera'};}
+    }
   }

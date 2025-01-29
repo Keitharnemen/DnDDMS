@@ -3,6 +3,7 @@ interface UserFormProps {
     onCancel: () => void
 };
 
+// formularz do tworzenia użytkownika
 const UserForm: React.FC<UserFormProps>= ( {onSubmit, onCancel}) => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

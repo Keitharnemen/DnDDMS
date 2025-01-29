@@ -3,44 +3,61 @@ import ICharacter from '../types/characters';
 import IClasses from '../types/classes';
 import IRace from '../types/races';
 
-export const fetchCharactersForCampaign= async () : Promise<ICharacter[]>  => {
+//pobieranie danych postaci dla konkretnej kampanii (id kampanii powinno być w sesji)
+export const fetchCharactersForCampaign= async () => {
   try {
     const response = await api.get(`/campaigns/characters`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching characters:', error);
-    throw error;
+    return response;
+  } catch (error: any) {
+    if(error.response){return error.response}
+    else {return {status: 500, message: 'Błąd serwera'};}
   }
 }
 
-export const fetchClasses = async () : Promise<IClasses[]> => {
+//pobieranie danych o klasach (potrzebne do tworzenia postaci)
+export const fetchClasses = async () => {
     try {
         const response = await api.get(`/campaigns/classes`);
-        return response.data;
-      } catch (error) {
-        console.error('Error fetching classes:', error);
-        throw error;
+        return response;
+      } catch (error: any) {
+        if(error.response){return error.response}
+        else {return {status: 500, message: 'Błąd serwera'};}
       }
 }
 
-export const fetchRaces = async () : Promise<IRace[]> => {
+//pobieranie danych o rasach (potrzebne do tworzenia postaci)
+export const fetchRaces = async () => {
     try {
         const response = await api.get(`/campaigns/races`);
-        return response.data;
-      } catch (error) {
-        console.error('Error fetching races:', error);
-        throw error;
+        return response;
+      } catch (error: any) {
+        if(error.response){return error.response}
+        else {return {status: 500, message: 'Błąd serwera'};}
       }
 }
 
-export const addCharacter = async (character : ICharacter) : Promise<ICharacter> =>
+//dodawanie postaci
+export const addCharacter = async (character : ICharacter) =>
 {
+  try{
   const response = await api.post('/campaigns/characters', {character : character})
-  return response.data
+  return response
+  }
+  catch (error: any) {
+    if(error.response){return error.response}
+    else {return {status: 500, message: 'Błąd serwera'};}
+  }
 }
 
-export const updateCharacter = async (character : ICharacter) : Promise<ICharacter> =>
+//aktualizacja postaci
+export const updateCharacter = async (character : ICharacter) =>
     {
+      try{
       const response = await api.put('/campaigns/characters', {character : character})
-      return response.data
+      return response
+      }
+      catch (error: any) {
+        if(error.response){return error.response}
+        else {return {status: 500, message: 'Błąd serwera'};}
+      }
     }

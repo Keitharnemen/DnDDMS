@@ -1,29 +1,48 @@
 import api from './api'
-import ICampaign from '../types/campaigns'
 
-export const fetchCampaigns= async () : Promise<ICampaign[]>  => {
+// pobieranie kampanii, w sesji użytkownika powinna być obecna informacja, dla jakiego DM je pobieramy
+export const fetchCampaigns= async () => {
   try {
     const response = await api.get(`/campaigns`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching campaigns:', error);
-    throw error;
+    return response;
+  } catch (error: any) {
+    if(error.response){return error.response}
+    else {return {status: 500, message: 'Błąd serwera'};}
   }
 }
 
-export const addCampaign = async (name: string, system: string, playersNum : number) : Promise<ICampaign> =>
+//dodawanie kampaniii
+export const addCampaign = async (name: string, system: string, playersNum : number) =>
 {
+  try {
   const response = await api.post('/campaigns', {name: name, system: system, playersNum: playersNum})
-  return response.data
+  return response
+  }catch (error: any) {
+    if(error.response){return error.response}
+    else {return {status: 500, message: 'Błąd serwera'};}
+  }
 }
 
+//funkcja, która ma ustawiać Id kampanii w sesji
 export const setCampaignId = async (campaignID : number) => {
+  try{
   const response = await api.post('/campaigns/changeCampaignID', {campaignID : campaignID})
+  return response
+  }catch (error: any) {
+    if(error.response){return error.response}
+    else {return {status: 500, message: 'Błąd serwera'};}
+  }
 }
 
-export const getCampaignName = async () : Promise<ICampaign> => {
+//funkcja tylko do poboru nazwy
+export const getCampaignName = async () => {
+  try{
   const response = await api.get('/campaigns/name')
-  return response.data
+  return response}
+  catch (error: any) {
+    if(error.response){return error.response}
+    else {return {status: 500, message: 'Błąd serwera'};}
+  }
 }
 
 

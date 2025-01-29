@@ -6,6 +6,7 @@ interface SessionTileProps {
     onClick: () => void
 }
 
+
 const CharacterTile : React.FC<SessionTileProps> = ({character, onClick}) => {
     return (
         <div onClick={() => onClick()} className='character-tile-wrapper'>

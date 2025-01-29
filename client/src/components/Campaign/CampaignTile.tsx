@@ -6,6 +6,7 @@ interface CampaignTileProps {
     onSelect: (ID : number) => void
 }
 
+// prosty komponent z nazwą kampani, kliknięcie powinno przenieść do innego widoku
 const CampaignTile : React.FC<CampaignTileProps> = ({name, campaignID, onSelect}) => {
     return (
         <div onClick={() => onSelect(campaignID)} className='campaign'>

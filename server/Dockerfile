@@ -11,9 +11,6 @@ RUN npm install
 # Skopiuj resztę aplikacji
 COPY . .
 
-# Skopiowanie pliku seed.ts
-COPY ./seed.ts ./seed.ts
-
 # Kompilacja TypeScript
 RUN npm run build
 

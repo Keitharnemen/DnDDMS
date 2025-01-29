@@ -4,23 +4,31 @@ import { fetchCampaigns, addCampaign, setCampaignId } from "../../api/campaignAp
 import ICampaign from "../../types/campaigns";
 import CampaignForm from "../Forms/CampaignForm";
 import { useNavigate } from "react-router-dom";
+import ErrorPanel from "../Error/ErrorPanel";
 
 
 const CampaignsList : React.FC = () => {
     
-    const [campaigns, setCampaigns] = useState<ICampaign[]>([])
-    const [creatingCampaign, setCreatingCampaign] = useState(false);
+    const [campaigns, setCampaigns] = useState<ICampaign[]>([]) // przechowujemy kampanie dla danego DM
+    const [creatingCampaign, setCreatingCampaign] = useState(false); //stan pozwalający określić, czy mamy wyświetlić listę kampanii czy formularz do tworzenia
+    const [error, setError] = useState<{status: number, message: string} | null>(null)
     const navigate = useNavigate()
     
-    
+    /* funkcje pomocniczne używające funkcji z api */
     const getCampaigns = async () => {
-        const data = await fetchCampaigns() ; setCampaigns(data);
+        const response = await fetchCampaigns() ; ;
+        if (response.status === 200) {setCampaigns(response.data)}
+        else if (response.data.message === 'Nie ma danych') {}
+        else {setError({status: response.status, message: response.data.message || 'Unknown'})}
+        
     }
 
     const postCampaign = async (name: string, system: string, playersNum : number) => {
-        const newCampaign = await addCampaign(name, system, playersNum)
-        setCampaigns([...campaigns, newCampaign])
-        setCreatingCampaign(false)
+        const response = await addCampaign(name, system, playersNum)
+        if (response.status === 201) {const newCampaign = response.data; setCampaigns([...campaigns, newCampaign])
+            setCreatingCampaign(false)}
+        else {setError({status: response.status, message: response.data.message || 'Unknown'})}
+        
     }
 
     const cancelCreating = () => {
@@ -29,8 +37,10 @@ const CampaignsList : React.FC = () => {
 
     const handleSelectCampaign = async (campaignID : number) =>
     {
-        await setCampaignId(campaignID)
-        navigate('/campaigns/sessions')
+        const response = await setCampaignId(campaignID)
+        if (response.status === 200) {navigate('/campaigns/sessions')}
+        else {setError({status: response.status, message: response.data.message || 'Unknown'})}
+        
     }
 
     useEffect(() => {
@@ -41,7 +51,7 @@ const CampaignsList : React.FC = () => {
         <>
         <div className="campaign-list-wrapper">
             {
-                creatingCampaign ? (
+                creatingCampaign ? ( // jeśli tworzymy kampanię, to pojawi się formularza, wpp. lista kampanii
                     <CampaignForm onSubmit={postCampaign} onCancel={cancelCreating}/>
                 ) : (
                     <>
@@ -53,6 +63,7 @@ const CampaignsList : React.FC = () => {
                 </>
                 )
             }
+            {error && <ErrorPanel status={error.status} message={error.message} onClick={() => setError(null)}/>}
         </div>
         </>
     )

@@ -1,44 +1,75 @@
 import api from './api'
 import ISession from '../types/sessions';
 
-export const fetchSession = async () : Promise<ISession[]>  => {
+//pobieranie sesji
+export const fetchSession = async ()  => {
   try {
     const response = await api.get(`/campaigns/sessions`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching campaigns:', error);
-    throw error;
+    return response;
+  } catch (error: any) {
+    if(error.response){return error.response}
+    else {return {status: 500, message: 'Błąd serwera'};}
   }
 }
 
-export const addSession = async (name: string) : Promise<ISession> =>
+
+//dodawanie sesji
+export const addSession = async (name: string) =>
 {
+  try{
     const response = await api.post('/campaigns/sessions/create', {name: name})
-    return response.data
+    return response
+  }
+  catch (error: any) {
+    if(error.response){return error.response}
+    else {return {status: 500, message: 'Błąd serwera'};}
+  }
 }
 
+//aktualizacja notatek czy planu dla sesji
 export const updateSessionData = async (plan: string, notes: string) =>
 {
+    try{
     const response = await api.put('/campaigns/sessions/updateData', {plan, notes})
-    return response.data
+    return response
+    }catch (error: any) {
+      if(error.response){return error.response}
+      else {return {status: 500, message: 'Błąd serwera'};}
+    }
 }
 
+//ustawianie id sesji w sesji użytkownika
 export const setSessionID = async (sessionID : number) => {
+  try{
     const response = await api.post('/campaigns/sessions/changeSessionID', {sessionID : sessionID})
-}
-
-export const fetchSessionDetails = async () : Promise<ISession>   => {
-  try {
-    const response = await api.get(`/campaigns/sessions/details`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching campaigns:', error);
-    throw error;
+    return response
+  }
+  catch (error: any) {
+    if(error.response){return error.response}
+    else {return {status: 500, message: 'Błąd serwera'};}
   }
 }
 
+//pobieranie danych o sesji (notatki i plan)
+export const fetchSessionDetails = async ()   => {
+  try {
+    const response = await api.get(`/campaigns/sessions/details`);
+    return response;
+  }  catch (error: any) {
+    if(error.response){return error.response}
+    else {return {status: 500, message: 'Błąd serwera'};}
+  }
+}
+
+//funkcja do zamykania sesji
 export const alockSession = async () => {
+  try{
   const response = await api.patch('/campaigns/sessions/locksession')
+  return response
+  }catch (error: any) {
+    if(error.response){return error.response}
+    else {return {status: 500, message: 'Błąd serwera'};}
+  }
 }
   
     

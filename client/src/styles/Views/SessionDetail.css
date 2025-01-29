@@ -1,0 +1,27 @@
+  .sessionDetails-wrapper{
+    display: flex;
+    justify-content: center;  
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    background-color: rgb(31, 41, 55);
+    margin-left: 10%;
+    margin-right: 10%;
+    border-radius: 5%;
+    padding: 20px;
+  }
+  
+  .login-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  #password-input, #login-input {
+    width: auto;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 5px;
+  }
