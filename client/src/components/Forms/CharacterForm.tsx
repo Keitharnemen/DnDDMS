@@ -9,33 +9,21 @@ import ErrorPanel from "../Error/ErrorPanel"
 
 interface CharacterFormProps {
     character: ICharacter | null
+    races: IRace[],
+    classes: IClasses[],
     onSubmit: (character : ICharacter)  => void
     onCancel: () => void
 };
 // formularz dla tworzenia postaci
-const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCancel}) => {
+const CharacterForm: React.FC<CharacterFormProps>= ( {character, races, classes, onSubmit, onCancel}) => {
 
     const min = 8
-    const [races, setRaces] = useState<IRace[]>([])
-    const [classes, setClasses] = useState<IClasses[]>([])
     const [error, setError] = useState<{status: number, message: string} | null>(null)
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-            const responseR = await fetchRaces()
-            if (responseR.status === 200) {  const r : IRace[] = responseR.data; setRaces(r)}
-            else {setError({status: responseR.status, message: responseR.data.message || 'Unknown'}); return}
-            
-            const responseC = await fetchClasses()
-            if (responseC.status === 200) {  const c : IClasses[] = responseC.data; setClasses(c)}
-            else {setError({status: responseR.status, message: responseC.data.message || 'Unknown'}); return} 
-            }
-            catch (e) {setError({status: 500, message: 'Błąd serwera'})}
-            
-        }
-        fetchData();
-    },[])
+    const [prevHPArgs, setPrevHPArgs] = useState({
+        level: 1,
+        constitution: 8,
+        classID: 0
+    });
 
 
     const [form, setForm] = useState({
@@ -46,85 +34,102 @@ const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCan
         raceId: character?.raceId || 0,
         classId: character?.classId || 0,
         level: character?.level || 1,
-        HP: character?.HP || 10,
-        STR: character?.STR || min,
-        DEX: character?.DEX || min,
-        CON: character?.CON || min,
-        WIS: character?.WIS || min,
-        INT: character?.INT || min,
-        CHA: character?.CHA || min
+        HP: character?.HP || 0,
+        strength: character?.strength || min,
+        dexterity: character?.dexterity || min,
+        condition: character?.condition || min,
+        wisdom: character?.wisdom || min,
+        inteligence: character?.inteligence || min,
+        charisma: character?.charisma || min
     })
 
-    // przechowywane historycznie dane, mające wpływ na niektóre pola w formularzu przy zmianie
-    const prevHPArgs = useRef({
-        level: form.level,
-        constitution: form.CON,
-        classID: form.classId
-    })
     
     //funkcja liczenia punktów życia przy zmianach niektórych atrybutów
-    const calculateHP = useMemo(() =>
+    const calculateHP = (level: number, constitution: number, classId: number, prevHP : number) =>
     {
-        let HP = form.HP;
-        const constitutionMOD = Math.floor(form.CON / 2) - 5;
-        const cls = classes.find((cls) => (cls.id === form.classId))
+        let HP = prevHP;
+        const constitutionMOD = Math.floor(constitution / 2) - 5 >= 0 ? Math.floor(constitution / 2) - 5 : 0;
+        const prevConstitutionMOD =  Math.floor(prevHPArgs.constitution / 2) - 5 >= 0 ? Math.floor(prevHPArgs.constitution / 2) - 5 : 0;
+        const cls = classes.find((cls) => (cls.id === classId)) || {id: 0, name: '', cube: 0}
 
-        if (form.level !== prevHPArgs.current.level)
-            HP += (Math.random() * cls!.cube + 1) + constitutionMOD
-        else if (constitutionMOD !== Math.floor(prevHPArgs.current.constitution / 2) - 5)
-            HP += form.level
-        else
-            HP = cls!.cube;
 
-        prevHPArgs.current = {
-        level: form.level,
-        constitution: form.CON,
-        classID: form.classId,
-        };
+        if (level > prevHPArgs.level)
+            {console.log('LEVEL'); HP += Math.floor((Math.random() * cls!.cube + 1)) + constitutionMOD}
+        else if (constitutionMOD !== prevConstitutionMOD)
+            {console.log('CON'); HP += level}
+        else{
+            console.log('CLASS');
+            HP = cls!.cube + constitutionMOD;
+        }
+        
 
         return HP;
-    }, [form.classId, form.CON, form.level])
+    }
 
     const handleLevelChange = (newLevel: number) =>
     {
-        setForm((prev) => ({
+        setForm((prev) => {
+            const newHP = calculateHP(newLevel, prevHPArgs.constitution, prevHPArgs.classID, prev.HP)
+            setPrevHPArgs({level: newLevel, constitution: prev.condition, classID: prev.classId});
+            return {
             ...prev,
             level: newLevel,
-            HP: calculateHP
-        }))
+            HP: newHP
+            }
+        })
+        
     }
 
     const handleClassChange = (newClassId : number) => {
         
-        setForm((prev) => ({
+
+        setForm((prev) => {
+            const newHP = calculateHP(prevHPArgs.level, prevHPArgs.constitution, newClassId, prev.HP)
+            setPrevHPArgs({level: prev.level, constitution: prev.condition, classID: newClassId});
+            return {
             ...prev,
             classId: newClassId,
-            HP: calculateHP
-        }))
+            HP: newHP
+            }
+        })
+        
     }
     
     const handleRaceChange = (newRaceId : number) => {
         const newRace = races.find((r) => (r.id === newRaceId))
-        const oldRace = races.find((r) => (r.id === form.raceId))
+        const oldRace = races.find((r) => (r.id === form.raceId)) || {
+            id: 0, name: '', strength: 0, dexterity: 0, condition: 0, wisdom: 0, inteligence: 0, charisma: 0
+        }
 
-        setForm((prev) => ({
+        
+        setForm((prev) => {
+            const newCON = prev.condition - oldRace!.condition + newRace!.condition;
+            
+           const updatedForm = {
             ...prev,
-            STR: prev.STR - oldRace!.strength + newRace!.strength,
-            DEX: prev.DEX - oldRace!.dexterity + newRace!.dexterity,
-            CON: prev.CON - oldRace!.condition + newRace!.condition,
-            WIS: prev.WIS - oldRace!.wisdom + newRace!.wisdom,
-            INT: prev.INT - oldRace!.inteligence + newRace!.inteligence,
-            CHA: prev.CHA - oldRace!.charisma + newRace!.charisma,
-            raceId: newRaceId
-        }))
+            strength: prev.strength - oldRace!.strength + newRace!.strength,
+            dexterity: prev.dexterity - oldRace!.dexterity + newRace!.dexterity,
+            condition: newCON,
+            wisdom: prev.wisdom - oldRace!.wisdom + newRace!.wisdom,
+            inteligence: prev.inteligence - oldRace!.inteligence + newRace!.inteligence,
+            charisma: prev.charisma - oldRace!.charisma + newRace!.charisma,
+            raceId: newRaceId }
+            handleConstitutionChange(newCON);
+            return updatedForm;
+        })
+        
     }
 
     const handleConstitutionChange = (newConstitution: number) => {
-        setForm((prev) => ({
+        setForm((prev) => {
+            const newHP = calculateHP(prevHPArgs.level, newConstitution, prevHPArgs.classID, prev.HP)
+            setPrevHPArgs({level: prev.level, constitution: newConstitution, classID: prev.classId});
+            return {
             ...prev,
-            CON:newConstitution,
-            HP: calculateHP
-        }))
+            condition:newConstitution,
+            HP: newHP
+            }
+        })
     }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -144,6 +149,7 @@ const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCan
                 type="text"
                 placeholder="Wprowadź imię:" 
                 value={form.name}
+                onChange={(event) => setForm((prev) => ({...prev, name: event.target.value}))}
                 readOnly = {!!character}
                 required
                 />
@@ -158,6 +164,7 @@ const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCan
                 type="text"
                 placeholder="Wprowadź nazwisko:"
                 value={form.surname}
+                onChange={(e) => setForm((prev) => ({...prev, surname: e.target.value}))}
                 readOnly = {!!character}
                 required
                 />
@@ -171,7 +178,7 @@ const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCan
             value={form.raceId}
             onChange={(event) => !character ? handleRaceChange(Number(event.target.value)) : {}}
             required>
-                <option value='' disabled>Wybierz rasę</option>
+                <option value={0} disabled>Wybierz rasę</option>
                 {races.map((race) => (
                     <option key={race.id} value={race.id}>{race.name}</option>)
                 )}
@@ -186,7 +193,7 @@ const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCan
             value={form.classId}
             onChange={(event) => !character ? handleClassChange(Number(event.target.value)) : {}}
             required>
-                <option value='' disabled>Wybierz klasę</option>
+                <option value={0} disabled>Wybierz klasę</option>
                 {classes.map((classe) => (
                     <option key={classe.id} value={classe.id}>{classe.name}</option>)
                 )}
@@ -203,7 +210,7 @@ const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCan
                 type="number"
                 value={form.level}
                 onChange={(event) => handleLevelChange(Number(event.target.value))} 
-                min={prevHPArgs.current.level}
+                min={prevHPArgs.level}
                 step={1}/>
             </div>
 
@@ -214,8 +221,8 @@ const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCan
                 id="chStrength"
                 className="character-form character-input"
                 type="number"
-                value={form.STR}
-                onChange={(event) => setForm((prev) => ({...prev, STR: Number(event.target.value)}))}
+                value={form.strength}
+                onChange={(event) => setForm((prev) => ({...prev, strength: Number(event.target.value)}))}
                 min={min}
                 step={1}/>
             </div>
@@ -227,8 +234,8 @@ const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCan
                 id="chDexterity"
                 className="character-form character-input"
                 type="number"
-                value={form.DEX}
-                onChange={(event) => setForm((prev) => ({...prev, DEX: Number(event.target.value)}))}
+                value={form.dexterity}
+                onChange={(event) => setForm((prev) => ({...prev, dexterity: Number(event.target.value)}))}
                 min={min}
                 step={1}/>
             </div>
@@ -240,9 +247,9 @@ const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCan
                 id="chConstitution"
                 className="character-form character-input"
                 type="number"
-                value={form.CON}
+                value={form.condition}
                 onChange={(event) => handleConstitutionChange(Number(event.target.value))}
-                min={prevHPArgs.current.constitution}
+                min={prevHPArgs.constitution}
                 step={1}/>
             </div>
 
@@ -253,8 +260,8 @@ const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCan
                 id="chWisdom"
                 className="character-form character-input"
                 type="number"
-                value={form.WIS}
-                onChange={(event) => setForm((prev) => ({...prev, WIS: Number(event.target.value)}))}
+                value={form.wisdom}
+                onChange={(event) => setForm((prev) => ({...prev, wisdom: Number(event.target.value)}))}
                 min={min}
                 step={1}/>
             </div>
@@ -266,8 +273,8 @@ const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCan
                 id="chInteligence"
                 className="character-form character-input"
                 type="number"
-                value={form.INT}
-                onChange={(event) => setForm((prev) => ({...prev, INT: Number(event.target.value)}))}
+                value={form.inteligence}
+                onChange={(event) => setForm((prev) => ({...prev, inteligence: Number(event.target.value)}))}
                 min={min}
                 step={1}/>
             </div>
@@ -279,8 +286,8 @@ const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCan
                 id="chCharisma"
                 className="character-form character-input"
                 type="number"
-                value={form.CHA}
-                onChange={(event) => setForm((prev) => ({...prev, CHA: Number(event.target.value)}))}
+                value={form.charisma}
+                onChange={(event) => setForm((prev) => ({...prev, charisma: Number(event.target.value)}))}
                 min={min}
                 step={1}/>
             </div>
@@ -296,7 +303,7 @@ const CharacterForm: React.FC<CharacterFormProps>= ( {character, onSubmit, onCan
                 value={form.HP}/>
             </div>
             
-            <button type="submit" name='chSubmitButton' id='chSubmitButton' className="character-form character-button">{character ? "Zapisz zmiany" : "Stwórz postać"}</button>
+            <button type="submit" name='chSubmitButton' id='chSubmitButton' disabled={form.raceId === 0 || form.classId === 0}  className="character-form character-button">{character ? "Zapisz zmiany" : "Stwórz postać"}</button>
             <button type="button" name='chCancelButton' id='chCancelButton' className="character-form character-button" onClick={onCancel}>Anuluj</button>
         </form>
         {error && <ErrorPanel status={error.status} message={error.message} onClick={() => setError(null)}/>}

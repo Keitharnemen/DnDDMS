@@ -1,7 +1,7 @@
 export interface IClasses {
     id: number,
     name: string,
-    description: string
+    //description: string
     cube: number
 }
 

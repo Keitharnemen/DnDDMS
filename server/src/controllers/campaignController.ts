@@ -96,14 +96,18 @@ export const addCharacter = async (req : Request, res : Response) => {
 
     const {character} = req.body
     if(!character) {res.status(400).json({message: 'Invalid input: no character'}); return}
-
+    console.log(character)
     const id = await getNextId("character")
     const newCharacter = new CharacterModel({
+        ...character,
         id: id,
         campaignId: campaignID,
-        ...character
 })
-
+    console.log({
+        ...character,
+        id: id,
+        campaignId: campaignID,
+})
     const saved = await newCharacter.save()
     res.status(201).json(saved)
 }catch (err) {
