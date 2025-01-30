@@ -29,7 +29,7 @@ const Home = () => {
   };
   return (
     <div className="home-wrapper">
-      <h1>Witaj w Wojcyb Dungeon Master System</h1>
+      <h1 className="header">Witaj w Wojcyb Dungeon Master System</h1>
       <form className="login-form" onSubmit={handleLoginUser}>
         <div className="login-wrapper ">
           <label htmlFor="login-input">Login:</label>

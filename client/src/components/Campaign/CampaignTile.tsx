@@ -1,4 +1,5 @@
 import React from "react";
+import '../../styles/Campaigns/campaignTileStyles.css'
 
 interface CampaignTileProps {
   name: string;
@@ -13,7 +14,7 @@ const CampaignTile: React.FC<CampaignTileProps> = ({
   onSelect,
 }) => {
   return (
-    <div onClick={() => onSelect(campaignID)} className="campaign">
+    <div className='campaign-tile' onClick={() => onSelect(campaignID)}>
       <h3>{name}</h3>
     </div>
   );

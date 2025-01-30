@@ -13,7 +13,6 @@ export const getCampaigns = async (req: Request, res: Response) => {
       return;
     }
 
-    console.log(DMID);
     const campaings = await campaignModel.find({ masterId: DMID });
     if (campaings.length === 0) {
       res.status(404).json({ message: "Nie ma danych" });
@@ -147,14 +146,8 @@ export const addCharacter = async (req: Request, res: Response) => {
       res.status(400).json({ message: "Invalid input: no character" });
       return;
     }
-    console.log(character);
     const id = await getNextId("character");
     const newCharacter = new CharacterModel({
-      ...character,
-      id: id,
-      campaignId: campaignID,
-    });
-    console.log({
       ...character,
       id: id,
       campaignId: campaignID,

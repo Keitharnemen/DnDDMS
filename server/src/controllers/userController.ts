@@ -6,8 +6,6 @@ import { getNextId } from "../utils/idGenerator";
 export const getUser = async (req: Request, res: Response) => {
   try {
     const userID = req.session.DMID;
-    console.log(userID);
-    console.log(!userID);
     if (!userID) {
       res.status(401).json({ message: "No User ID" });
       return;
@@ -31,7 +29,6 @@ export const getUser = async (req: Request, res: Response) => {
 export const loginUser = async (req: Request, res: Response) => {
   try {
     const { login, password } = req.body;
-    console.log(login);
     if (!login || !password) {
       res.status(400).json({ message: "Invalid input: no login or password" });
       return;
@@ -44,7 +41,6 @@ export const loginUser = async (req: Request, res: Response) => {
     }
 
     const isPassOK = await bcrypt.compare(password, user.password);
-    console.log(user.id);
     if (isPassOK) {
       res.cookie(
         "roles",

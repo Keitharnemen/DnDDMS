@@ -1,0 +1,19 @@
+.campaign-tile {
+    display: flex
+;
+    height: 7rem;
+    width: 7rem;
+    background-color: #4d86b6;
+    gap: 20px;
+    align-items: center;
+    margin: 10px;
+    text-align: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.campaign-tile h3{
+    color: white;
+    font-weight: bold;
+    overflow: auto;
+}

@@ -5,6 +5,7 @@ import IRace from "../../types/races";
 import IClasses from "../../types/classes";
 import { fetchClasses, fetchRaces } from "../../api/characterApi";
 import ErrorPanel from "../Error/ErrorPanel";
+import '../../styles/Forms/characterFormStyles.css'
 
 interface CharacterFormProps {
   character: ICharacter | null;
@@ -187,6 +188,7 @@ const CharacterForm: React.FC<CharacterFormProps> = ({
 
   return ReactDOM.createPortal(
     <>
+      <div className="character-form">
       <form onSubmit={handleSubmit}>
         <div className="chName-wrapper">
           <label htmlFor="chName">Imię:</label>
@@ -408,7 +410,7 @@ const CharacterForm: React.FC<CharacterFormProps> = ({
           name="chSubmitButton"
           id="chSubmitButton"
           disabled={form.raceId === 0 || form.classId === 0}
-          className="character-form character-button"
+          className="character-button"
         >
           {character ? "Zapisz zmiany" : "Stwórz postać"}
         </button>
@@ -416,7 +418,7 @@ const CharacterForm: React.FC<CharacterFormProps> = ({
           type="button"
           name="chCancelButton"
           id="chCancelButton"
-          className="character-form character-button"
+          className="character-button"
           onClick={onCancel}
         >
           Anuluj
@@ -429,6 +431,7 @@ const CharacterForm: React.FC<CharacterFormProps> = ({
           onClick={() => setError(null)}
         />
       )}
+      </div>
     </>,
     document.body
   );

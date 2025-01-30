@@ -7,6 +7,7 @@ import {
 } from "../api/sessionApi";
 import { SidePanelButton } from "../components/SidePanel/SidePanelButton";
 import ErrorPanel from "../components/Error/ErrorPanel";
+import '../styles/Views/sessionDetailsStyles.css'
 
 const SessionsDetails = () => {
   const navigate = useNavigate();

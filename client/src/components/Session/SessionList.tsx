@@ -5,6 +5,7 @@ import ISession from "../../types/sessions";
 import SessionForm from "../Forms/SessionForm";
 import { useNavigate } from "react-router-dom";
 import ErrorPanel from "../Error/ErrorPanel";
+import '../../styles/Sessions/sessionListStyles.css'
 
 // lista sesji, podpbnie działająca do listy kampanii
 const SessionList: React.FC = () => {
@@ -85,6 +86,7 @@ const SessionList: React.FC = () => {
             >
               Stwórz sesję
             </button>
+            <div className="session-list-wrapper">
             {Sessions.length > 0 ? (
               Sessions.map((session) => (
                 <SessionTile
@@ -101,6 +103,7 @@ const SessionList: React.FC = () => {
             ) : (
               <p className="emptySession-message">Nie stworzono żadnej sesji</p>
             )}
+            </div>
           </>
         )}
       </div>

@@ -36,7 +36,7 @@ const Sessions = () => {
   };
   return (
     <>
-      <h1>Kampania: {name}</h1>
+      <h1 className="header">Kampania: {name}</h1>
       <SidePanelButton />
       <CharacterList playersNum={playersNum} />
       <SessionList />

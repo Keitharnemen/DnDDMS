@@ -1,0 +1,22 @@
+.sidepanel-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: fit-content;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    display: flex
+;
+}
+
+.sidepanel-background {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidepanel-background button{
+    width: 100%;
+}

@@ -30,7 +30,7 @@ const Campaigns = () => {
 
   return (
     <>
-      <h1>Witaj {name}. Oto Twoje kampanie:</h1>
+      <h1 className="header">Witaj {name}. Oto Twoje kampanie:</h1>
       <SidePanelButton />
       <CampaignsList />
       {error && (

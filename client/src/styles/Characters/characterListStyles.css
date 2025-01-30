@@ -1,11 +1,4 @@
-.session-wrapper {
-    align-items: center;
-    justify-items: center;
-    display: flex;
-    height: 30vh;
-    flex-direction: column;
-}
-.session-list-wrapper {
+.character-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;

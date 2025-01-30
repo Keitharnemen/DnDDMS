@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import CampaignTile from "./CampaignTile";
-import {
-  fetchCampaigns,
-  addCampaign,
-  setCampaignId,
-} from "../../api/campaignApi";
+import {fetchCampaigns, addCampaign,setCampaignId} from "../../api/campaignApi";
 import ICampaign from "../../types/campaigns";
 import CampaignForm from "../Forms/CampaignForm";
 import { useNavigate } from "react-router-dom";
 import ErrorPanel from "../Error/ErrorPanel";
+import "../../styles/Campaigns/campaignListStyles.css"
 
 const CampaignsList: React.FC = () => {
   const [campaigns, setCampaigns] = useState<ICampaign[]>([]); // przechowujemy kampanie dla danego DM
@@ -73,18 +70,19 @@ const CampaignsList: React.FC = () => {
 
   return (
     <>
-      <div className="campaign-list-wrapper">
+      <div className="campaign-list">
         {creatingCampaign ? ( // jeśli tworzymy kampanię, to pojawi się formularza, wpp. lista kampanii
           <CampaignForm onSubmit={postCampaign} onCancel={cancelCreating} />
         ) : (
           <>
             <button
               id="creating-button"
-              className="campaign"
+              className="action-button"
               onClick={() => setCreatingCampaign(true)}
             >
               Stwórz kampanię
             </button>
+            <div className="campaign-list-wrapper">
             {campaigns.length > 0 ? (
               campaigns.map((campaign) => (
                 <CampaignTile
@@ -95,10 +93,11 @@ const CampaignsList: React.FC = () => {
                 />
               ))
             ) : (
-              <p className="emptySession-message">
+              <p className="emptyCampaign-message">
                 Nie stworzono żadnej kampanii
               </p>
             )}
+            </div>
           </>
         )}
         {error && (

@@ -1,4 +1,5 @@
 import React from "react";
+import '../../styles/Sessions/sessionTileStyles.css'
 
 interface SessionTileProps {
   details: {
@@ -19,7 +20,7 @@ const SessionTile: React.FC<SessionTileProps> = ({
   onSelect,
 }) => {
   return (
-    <div onClick={() => onSelect(sessionID, details)} className="session">
+    <div onClick={() => onSelect(sessionID, details)} className="session-tile">
       <h3>{details.name}</h3>
     </div>
   );

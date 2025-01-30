@@ -1,0 +1,19 @@
+.character-tile {
+    flex-direction: column;
+    display: flex;
+    height: fit-content;
+    width: fit-content;
+    background-color: #4d86b6;
+    gap: 5px;
+    align-items: center;
+    margin: 10px;
+    text-align: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.character-tile h3{
+    color: white;
+    font-weight: bold;
+    overflow: auto;
+}

@@ -1,0 +1,8 @@
+.character-form{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    background-color: rgb(31, 41, 55);
+}

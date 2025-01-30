@@ -5,9 +5,6 @@ import { getNextId } from "../utils/idGenerator";
 export const getSessions = async (req: Request, res: Response) => {
   try {
     const campaignID = req.session.campaignID;
-    console.log("ID Kampani");
-    console.log(campaignID);
-    console.log(req.session.campaignID);
     if (!campaignID) {
       res.status(400).json({ message: "Invalid input: no campaignID" });
       return;
@@ -49,7 +46,6 @@ export const addSession = async (req: Request, res: Response) => {
       campaignId: campaignID,
       startDate: Date.now().toString(),
     });
-    console.log(newSession);
     const saved = await newSession.save();
     res.status(201).json(saved);
   } catch (err) {
@@ -104,7 +100,6 @@ export const updateSessionData = async (req: Request, res: Response) => {
     session.plan = plan || session.plan;
     session.notes = notes || session.notes;
 
-    console.log(session);
     await session.save();
     res.status(200).json(session);
   } catch (err) {

@@ -1,4 +1,4 @@
-import "../../styles/Error/styles.css";
+import "../../styles/Error/errorStyles.css";
 interface ErrorPanelProps {
   status: number;
   message: string;

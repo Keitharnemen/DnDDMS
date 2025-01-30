@@ -12,6 +12,7 @@ import {
 import ErrorPanel from "../Error/ErrorPanel";
 import IClasses from "../../types/classes";
 import IRace from "../../types/races";
+import '../../styles/Characters/characterListStyles.css'
 
 interface CharacterListProps {
   playersNum: number;
@@ -122,6 +123,7 @@ const CharacterList: React.FC<CharacterListProps> = ({ playersNum }) => {
 
   return (
     <>
+      <div className="character-wrapper">
       {[...Array(playersNum)].map((_, index) => {
         return (
           <CharacterTile
@@ -136,7 +138,8 @@ const CharacterList: React.FC<CharacterListProps> = ({ playersNum }) => {
             }}
           />
         );
-      })}
+      })} 
+      </div>
 
       {creatingCharacter && (
         <CharacterForm

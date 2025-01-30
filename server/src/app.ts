@@ -21,19 +21,19 @@ declare module "express-session" {
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:3000", // Zmienna zależna od Twojej aplikacji frontendowej
-    credentials: true, // Umożliwia przesyłanie ciasteczek
+    origin: "http://localhost:3000", 
+    credentials: true,
   })
 );
 app.use(
   session({
-    secret: "mysecretkey", // Klucz używany do podpisywania ciasteczek sesyjnych
-    resave: false, // Nie zapisuj sesji, jeśli nie była zmieniana
-    saveUninitialized: false, // Nie zapisuj pustych sesji
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false,
     cookie: {
-      secure: false, // Wartość `false` w przypadku pracy na HTTP (ustaw na `true` w przypadku HTTPS)
-      httpOnly: true, // Ochrona przed dostępem z poziomu JavaScript w przeglądarce
-      maxAge: 3600000, // Czas życia ciasteczka (1 godzina)
+      secure: false,
+      httpOnly: true,
+      maxAge: 3600000,
     },
   })
 );
