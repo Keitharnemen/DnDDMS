@@ -11,13 +11,13 @@ import '../styles/Views/sessionDetailsStyles.css'
 
 const SessionsDetails = () => {
   const navigate = useNavigate();
+  const [name, setName] = useState("");
   const [plan, setPlan] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
   const [error, setError] = useState<{
     status: number;
     message: string;
   } | null>(null);
-  let name = "";
 
   const getSessionsDetails = async () => {
     const response = await fetchSessionDetails();
@@ -25,7 +25,7 @@ const SessionsDetails = () => {
       const data = response.data;
       setPlan(data.plan);
       setNotes(data.notes);
-      name = data.name;
+      setName(data.name);
     } else {
       setError({
         status: response.status,
@@ -66,8 +66,7 @@ const SessionsDetails = () => {
 
   return (
     <div className="sessionDetails-wrapper">
-      <SidePanelButton />
-      <h1>Sesja : {name}</h1>
+      <h1>Sesja: {name}</h1>
 
       <div className="session-details plans-wrapper">
         <label htmlFor="plans-input">Plan ramowy:</label>
@@ -88,7 +87,7 @@ const SessionsDetails = () => {
           className="session-details notes"
         />
       </div>
-
+      <div className="button-wrapper">
       <button type="button" onClick={async () => await saveData()}>
         Zapisz dane
       </button>
@@ -98,6 +97,7 @@ const SessionsDetails = () => {
       <button type="button" onClick={() => lockSession()}>
         Zamknij sesję
       </button>
+      </div>
       {error && (
         <ErrorPanel
           status={error.status}

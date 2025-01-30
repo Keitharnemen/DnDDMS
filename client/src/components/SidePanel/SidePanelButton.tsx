@@ -11,7 +11,7 @@ export const SidePanelButton: React.FC = () => {
   return (
     <>
       <button onClick={() => setIsOpen(true)}>
-        <img src="sidePanel.png" alt="Panel boczny" width="24" height="24" />
+        <img src="/sidePanel.png" alt="Panel boczny" width="24" height="24" />
       </button>
       <SidePanel isOpen={isOpen} isAdmin={isAdmin} onClick={closePanel} />
     </>

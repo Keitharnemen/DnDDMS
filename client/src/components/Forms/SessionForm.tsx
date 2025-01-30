@@ -26,7 +26,7 @@ interface SessionFormProps {
             />
           </div>
           <button type="submit" className="session-form session-button submit">
-            Stwórz kampanię
+            Stwórz sesję
           </button>
           <button
             onClick={onCancel}

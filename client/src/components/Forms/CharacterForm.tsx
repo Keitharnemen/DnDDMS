@@ -1,11 +1,11 @@
 import ReactDOM from "react-dom";
 import ICharacter from "../../types/characters";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {useState } from "react";
 import IRace from "../../types/races";
 import IClasses from "../../types/classes";
-import { fetchClasses, fetchRaces } from "../../api/characterApi";
 import ErrorPanel from "../Error/ErrorPanel";
 import '../../styles/Forms/characterFormStyles.css'
+import { calculateHP } from "../../utils/calculateHP";
 
 interface CharacterFormProps {
   character: ICharacter | null;
@@ -50,49 +50,15 @@ const CharacterForm: React.FC<CharacterFormProps> = ({
     charisma: character?.charisma || min,
   });
 
-  //funkcja liczenia punktów życia przy zmianach niektórych atrybutów
-  const calculateHP = (
-    level: number,
-    constitution: number,
-    classId: number,
-    prevHP: number
-  ) => {
-    let HP = prevHP;
-    const constitutionMOD =
-      Math.floor(constitution / 2) - 5 >= 0
-        ? Math.floor(constitution / 2) - 5
-        : 0;
-    const prevConstitutionMOD =
-      Math.floor(prevHPArgs.constitution / 2) - 5 >= 0
-        ? Math.floor(prevHPArgs.constitution / 2) - 5
-        : 0;
-    const cls = classes.find((cls) => cls.id === classId) || {
-      id: 0,
-      name: "",
-      cube: 0,
-    };
-
-    if (level > prevHPArgs.level) {
-      console.log("LEVEL");
-      HP += Math.floor(Math.random() * cls!.cube + 1) + constitutionMOD;
-    } else if (constitutionMOD !== prevConstitutionMOD) {
-      console.log("CON");
-      HP += level;
-    } else {
-      console.log("CLASS");
-      HP = cls!.cube + constitutionMOD;
-    }
-
-    return HP;
-  };
-
   const handleLevelChange = (newLevel: number) => {
     setForm((prev) => {
       const newHP = calculateHP(
         newLevel,
         prevHPArgs.constitution,
         prevHPArgs.classID,
-        prev.HP
+        prev.HP,
+        classes,
+        prevHPArgs
       );
       setPrevHPArgs({
         level: newLevel,
@@ -113,7 +79,9 @@ const CharacterForm: React.FC<CharacterFormProps> = ({
         prevHPArgs.level,
         prevHPArgs.constitution,
         newClassId,
-        prev.HP
+        prev.HP,
+        classes,
+        prevHPArgs
       );
       setPrevHPArgs({
         level: prev.level,
@@ -166,7 +134,9 @@ const CharacterForm: React.FC<CharacterFormProps> = ({
         prevHPArgs.level,
         newConstitution,
         prevHPArgs.classID,
-        prev.HP
+        prev.HP,
+        classes,
+        prevHPArgs
       );
       setPrevHPArgs({
         level: prev.level,
