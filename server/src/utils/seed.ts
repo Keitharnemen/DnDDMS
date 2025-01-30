@@ -1,5 +1,5 @@
 import mongoose, { mongo } from "mongoose";
-import bcrypt from 'bcryptjs'
+import bcrypt from "bcryptjs";
 import { RaceModel } from "../dbschemas/races";
 import { ClassModel } from "../dbschemas/classes";
 import { UserModel } from "../dbschemas/users";
@@ -8,8 +8,7 @@ import { seedStatusModel } from "../dbschemas/seedStatus";
 // Funkcja seedująca dane
 export const seedData = async () => {
   try {
-
-    const isSeeded = await seedStatusModel.findOne({isSeeded : true}).lean();
+    const isSeeded = await seedStatusModel.findOne({ isSeeded: true }).lean();
     if (isSeeded) {
       return;
     }
@@ -17,7 +16,7 @@ export const seedData = async () => {
     const races = [
       {
         id: 1,
-        name: 'Człowiek',
+        name: "Człowiek",
         strength: 1,
         dexterity: 1,
         condition: 1,
@@ -27,7 +26,7 @@ export const seedData = async () => {
       },
       {
         id: 2,
-        name: 'Elf',
+        name: "Elf",
         strength: 0,
         dexterity: 2,
         condition: 0,
@@ -37,7 +36,7 @@ export const seedData = async () => {
       },
       {
         id: 3,
-        name: 'Krasnolud',
+        name: "Krasnolud",
         strength: 0,
         dexterity: 0,
         condition: 2,
@@ -47,7 +46,7 @@ export const seedData = async () => {
       },
       {
         id: 4,
-        name: 'Niziołek',
+        name: "Niziołek",
         strength: 0,
         dexterity: 2,
         condition: 0,
@@ -57,7 +56,7 @@ export const seedData = async () => {
       },
       {
         id: 5,
-        name: 'Diabelstwo',
+        name: "Diabelstwo",
         strength: 0,
         dexterity: 0,
         condition: 0,
@@ -67,7 +66,7 @@ export const seedData = async () => {
       },
       {
         id: 6,
-        name: 'Drakon',
+        name: "Drakon",
         strength: 2,
         dexterity: 0,
         condition: 0,
@@ -77,7 +76,7 @@ export const seedData = async () => {
       },
       {
         id: 7,
-        name: 'Gnom',
+        name: "Gnom",
         strength: 0,
         dexterity: 0,
         condition: 0,
@@ -87,7 +86,7 @@ export const seedData = async () => {
       },
       {
         id: 8,
-        name: 'Półelf',
+        name: "Półelf",
         strength: 0,
         dexterity: 1,
         condition: 1,
@@ -97,90 +96,94 @@ export const seedData = async () => {
       },
       {
         id: 9,
-        name: 'Półork',
+        name: "Półork",
         strength: 2,
         dexterity: 0,
         condition: 1,
         wisdom: 0,
         inteligence: 0,
         charisma: 0,
-      }
+      },
     ];
 
     const classes = [
       {
         id: 1,
-        name: 'Barbarzyńca',
-        cube: 12
+        name: "Barbarzyńca",
+        cube: 12,
       },
       {
         id: 2,
-        name: 'Bard',
-        cube: 6
+        name: "Bard",
+        cube: 6,
       },
       {
         id: 3,
-        name: 'Kapłan',
-        cube: 8
+        name: "Kapłan",
+        cube: 8,
       },
       {
         id: 4,
-        name: 'Druid',
-        cube: 8
+        name: "Druid",
+        cube: 8,
       },
       {
         id: 5,
-        name: 'Wojownik',
-        cube: 10
+        name: "Wojownik",
+        cube: 10,
       },
       {
         id: 6,
-        name: 'Mnich',
-        cube: 8
+        name: "Mnich",
+        cube: 8,
       },
       {
         id: 7,
-        name: 'Paladyn',
-        cube: 10
+        name: "Paladyn",
+        cube: 10,
       },
       {
         id: 8,
-        name: 'Łowca',
-        cube: 10
+        name: "Łowca",
+        cube: 10,
       },
       {
         id: 9,
-        name: 'Łotrzyk',
-        cube: 8
+        name: "Łotrzyk",
+        cube: 8,
       },
       {
         id: 10,
-        name: 'Czarownik',
-        cube: 4
+        name: "Czarownik",
+        cube: 4,
       },
       {
         id: 11,
-        name: 'Czarodziej',
-        cube: 4
+        name: "Czarodziej",
+        cube: 4,
       },
     ];
 
-    const hPassword = await bcrypt.hash('Dragon1', 12)
+    const hPassword = await bcrypt.hash("Dragon1", 12);
     const user = {
       id: 1,
-      name: 'Woj',
-      surname: 'Cyb',
+      name: "Woj",
+      surname: "Cyb",
       login: "Wojcyb",
       password: hPassword,
       isAdmin: true,
-      isMaster: true
-    }
+      isMaster: true,
+    };
 
-    await Promise.all([RaceModel.insertMany(races),ClassModel.insertMany(classes),UserModel.create(user)])
+    await Promise.all([
+      RaceModel.insertMany(races),
+      ClassModel.insertMany(classes),
+      UserModel.create(user),
+    ]);
     console.log("Dane dodanr do bazy!");
 
-    await seedStatusModel.create({isSeeded: true})
-    console.log("Flaga statusu utworzona")
+    await seedStatusModel.create({ isSeeded: true });
+    console.log("Flaga statusu utworzona");
   } catch (error) {
     console.error("Błąd podczas seedowania danych:", error);
     process.exit(1);

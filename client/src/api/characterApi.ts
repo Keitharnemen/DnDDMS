@@ -1,7 +1,5 @@
 import api from './api'
 import ICharacter from '../types/characters';
-import IClasses from '../types/classes';
-import IRace from '../types/races';
 
 //pobieranie danych postaci dla konkretnej kampanii (id kampanii powinno być w sesji)
 export const fetchCharactersForCampaign= async () => {
