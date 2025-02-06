@@ -55,6 +55,7 @@
     "@babel/plugin-transform-optional-catch-binding": "^7.20.0",
     "@babel/plugin-transform-optional-chaining": "^7.20.0",
     "@babel/plugin-transform-unicode-property-regex": "^7.20.0",
+    "@react-oauth/google": "^0.12.1",
     "@types/body-parser": "^1.19.5",
     "@types/jest": "^29.5.14",
     "@types/js-cookie": "^3.0.6",

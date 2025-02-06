@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../api/userApi";
+import { googleLogin, loginUser } from "../api/userApi";
 import ErrorPanel from "../components/Error/ErrorPanel";
 import "../styles/Views/Home.css";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -27,6 +28,21 @@ const Home = () => {
       });
     }
   };
+
+  const handleGoogleLogin = async (response: any) => {
+    const token = response.credential
+
+    const r = await googleLogin(token);
+    if (r.status === 200) {
+      navigate("/campaigns");
+    } else {
+      setError({
+        status: r.status,
+        message: r.data.message || "Unknown",
+      });
+    }
+  };
+
   return (
     <div className="home-wrapper">
       <h1 className="header">Witaj w Wojcyb Dungeon Master System</h1>
@@ -53,6 +69,9 @@ const Home = () => {
           Zaloguj
         </button>
       </form>
+      <GoogleLogin 
+        onSuccess={handleGoogleLogin}
+        onError={() => console.log("Błąd logowania")}/>
 
       {error && (
         <ErrorPanel

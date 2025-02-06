@@ -72,3 +72,17 @@ export const signOutUser = async () => {
     }
   }
 };
+
+export const googleLogin = async (token : string) => {
+  try{
+    const r = await api.post('/users/googleLogin', {token: token})
+    return r;
+  }
+  catch (error : any) {
+    if (error.response) {
+      return error.response;
+    } else {
+      return { status: 500, message: "Błąd serwera" };
+    }
+  }
+}

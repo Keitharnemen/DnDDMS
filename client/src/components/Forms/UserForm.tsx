@@ -116,7 +116,7 @@ interface UserFormProps {
           </div>
   
           <button type="submit" className="user-form user-button submit">
-            Stwórz sesję
+            Stwórz użytkownika
           </button>
           <button
             onClick={onCancel}
